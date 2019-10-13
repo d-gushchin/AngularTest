@@ -6,9 +6,14 @@
     [components]="components"
     rowSelection="multiple"
     suppressRowClickSelection="true"
+    [allowContextMenuWithControlKey]="true"
+    [getContextMenuItems]="getContextMenuItems"
+    angularCompileHeaders="true"
+    (selectionChanged)="onSelectionChanged($event)"
   >
   </ag-grid-angular>
 </div>
 
 
 <router-outlet></router-outlet>
+<!-- suppressContextMenu=true -->

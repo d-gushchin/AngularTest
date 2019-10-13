@@ -12,12 +12,22 @@ export class AppComponent {
 
   columnDefs = [
     {
+      headerName: '',
+      field: 'thumbnails111',
+      cellRenderer: [],
+      // checkboxSelection: true,
+      headerCheckboxSelection: true,
+      headerCheckboxSelectionFilteredOnly: true,
+
+    },
+    {
       headerName: 'thumbnails',
       field: 'thumbnails',
       cellRenderer: 'thumbnailsImageRender',
       checkboxSelection: true,
-      headerCheckboxSelection: true,
-      headerCheckboxSelectionFilteredOnly: true,
+      // headerCheckboxSelection: true,
+      // headerCheckboxSelectionFilteredOnly: true,
+
     },
     {
       headerName: 'publishedAt',
@@ -40,7 +50,7 @@ export class AppComponent {
   constructor(private http: HttpClient) {
     this.components = {
       titleLinksRenderer: this.titleLinksRenderer,
-      thumbnailsImageRender: this.thumbnailsImageRender
+      thumbnailsImageRender: this.thumbnailsImageRender,
     };
   }
 
@@ -66,7 +76,7 @@ export class AppComponent {
     const data = this.http.get('https://www.googleapis.com/youtube/v3/search?key=AIzaSyDOfT_BO81aEZScosfTYMruJobmpjqNeEk&maxResults=' +
       '50&type=video&part=snippet&q=john');
 
-    data.subscribe(res => {
+    data.subscribe((res: any) => {
       this.rowData = res.items.map(item => {
         const {title, publishedAt, description, thumbnails} = item.snippet;
         return {
@@ -78,5 +88,27 @@ export class AppComponent {
         };
       });
     });
+  }
+
+  onSelectionChanged(params) {
+    console.log("test",  params.api.getSelectedRows())
+  }
+
+  getContextMenuItems(params: any) {
+    console.log("params", params)
+    if (params.column.colId === 'title') {
+      return [
+        {
+          name: "Open in new tab",
+          action: () => {
+            window.open(`https://www.youtube.com/watch?v=${params.node.data.videoId}`, "_blank");
+          }
+        },
+        "copy",
+        "paste",
+        "copyWithHeaders",
+      ];
+    }
+    return [];
   }
 }
